@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PHP API</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+    <h1> Student Data API</h1>
+    <div>
+        <select id="limitSelect">
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+        </select>
+        <button id="fetchButton">Fetch</button>
+        <br clear="all"><br clear="all">
+    </div>
+
+    <div id="studentList" class="student-list"></div>
+
+    <script>
+        document.getElementById("fetchButton").addEventListener("click", function() {
+            const limit = document.getElementById("limitSelect").value;
+
+            fetch(`index.php?limit=${limit}`)
+                .then(response => response.json())
+                .then(data => {
+                    const studentList = document.getElementById("studentList");
+                    studentList.innerHTML = "";
+
+                    data.forEach(student => {
+                        const studentName = `${student.first_name} ${student.last_name}`;
+                        const rollID = `${student.roll_id}`;
+                        const batch = `${student.batch}`;
+
+                        const card = document.createElement("div");
+                        card.classList.add("card-container");
+
+                         card.innerHTML = `
+                            <span class="pro">#${rollID}</span>
+                            <img class="round" src="icon.png" width='110' alt="user" />
+                            <h3>${studentName}</h3>
+                            <h6>${batch}</h6>
+                            <div class="buttons">
+                            </div><div class="skills"></div>`;
+
+                        // Append the card to the studentList
+                        studentList.appendChild(card);
+                        setTimeout(() => {
+                            card.classList.add("loaded");
+                        }, 50);
+                    });
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+</body>
+</html>
